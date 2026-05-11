@@ -2,8 +2,6 @@
 title: Releasing to Production
 ---
 
-## How distribution works
-
 A Zenbu.js app ships in two pieces:
 
 - **The Electron app.** A small `.app` that contains a launcher and a bundled package manager. This is what the user installs.
@@ -16,7 +14,11 @@ Because the source lives in a separate repository, you can push updates without 
 The build is configured inside `zenbu.config.ts` using `defineBuildConfig`:
 
 ```typescript zenbu.config.ts
-import { defineConfig, definePlugin, defineBuildConfig } from "@zenbujs/core/config"
+import {
+  defineConfig,
+  definePlugin,
+  defineBuildConfig,
+} from "@zenbujs/core/config";
 
 export default defineConfig({
   // ...
@@ -29,16 +31,13 @@ export default defineConfig({
       "zenbu.config.ts",
       "vite.config.ts",
     ],
-    ignore: [
-      "src/**/*.test.ts",
-      "src/**/*.spec.ts",
-    ],
+    ignore: ["src/**/*.test.ts", "src/**/*.spec.ts"],
     mirror: {
       target: "your-org/your-app",
       branch: "main",
     },
   }),
-})
+});
 ```
 
 ### include and ignore
@@ -50,20 +49,20 @@ export default defineConfig({
 Build plugins let you transform files during staging or emit new files. Each plugin receives every file and can modify its contents, drop it entirely, or leave it unchanged.
 
 ```typescript
-import { defineBuildConfig } from "@zenbujs/core/config"
-import type { BuildPlugin } from "@zenbujs/core/config"
+import { defineBuildConfig } from "@zenbujs/core/config";
+import type { BuildPlugin } from "@zenbujs/core/config";
 
 const injectLicense: BuildPlugin = {
   name: "inject-license",
   done(ctx) {
-    ctx.emit("LICENSE", "MIT License\n...")
+    ctx.emit("LICENSE", "MIT License\n...");
   },
-}
+};
 
 export default defineBuildConfig({
   // ...
   plugins: [injectLicense],
-})
+});
 ```
 
 A build plugin can define a `transform(path, contents)` function that runs on each file. Returning a string replaces the file's contents, returning `null` drops the file, and returning nothing leaves it as-is. The `done` function runs after all files are processed and can emit additional files with `ctx.emit()`.
@@ -109,7 +108,7 @@ The Electron app bundles a package manager that runs `install` on first launch a
 defineBuildConfig({
   // ...
   packageManager: { type: "bun", version: "1.3.12" },
-})
+});
 ```
 
 Supported options are `pnpm`, `npm`, `yarn`, and `bun`. The specified version is downloaded and cached during `zen build:electron`, then packaged into the `.app` bundle so the user's machine doesn't need a package manager installed.
@@ -134,9 +133,23 @@ src/renderer/
 <html>
   <head>
     <style>
-      body { background: #111; color: #e5e5e5; font-family: system-ui, sans-serif; }
-      .progress { width: 280px; height: 4px; background: #222; border-radius: 2px; overflow: hidden; }
-      .bar { background: #6a59ff; height: 100%; transition: width 200ms; }
+      body {
+        background: #111;
+        color: #e5e5e5;
+        font-family: system-ui, sans-serif;
+      }
+      .progress {
+        width: 280px;
+        height: 4px;
+        background: #222;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .bar {
+        background: #6a59ff;
+        height: 100%;
+        transition: width 200ms;
+      }
     </style>
   </head>
   <body>
@@ -144,14 +157,15 @@ src/renderer/
     <div class="progress"><div class="bar" id="bar"></div></div>
     <script>
       window.zenbuInstall.on("step", ({ label }) => {
-        document.getElementById("step").textContent = label
-      })
+        document.getElementById("step").textContent = label;
+      });
       window.zenbuInstall.on("progress", ({ ratio }) => {
-        if (ratio != null) document.getElementById("bar").style.width = `${ratio * 100}%`
-      })
+        if (ratio != null)
+          document.getElementById("bar").style.width = `${ratio * 100}%`;
+      });
       window.zenbuInstall.on("error", ({ message }) => {
-        document.getElementById("step").textContent = message
-      })
+        document.getElementById("step").textContent = message;
+      });
     </script>
   </body>
 </html>
@@ -159,13 +173,13 @@ src/renderer/
 
 The available events are:
 
-| Event | Payload |
-|-------|---------|
-| `step` | `{ id: "clone" \| "fetch" \| "install" \| "handoff", label: string }` |
-| `message` | `{ text: string }` |
+| Event      | Payload                                                               |
+| ---------- | --------------------------------------------------------------------- |
+| `step`     | `{ id: "clone" \| "fetch" \| "install" \| "handoff", label: string }` |
+| `message`  | `{ text: string }`                                                    |
 | `progress` | `{ phase?: string, loaded?: number, total?: number, ratio?: number }` |
-| `done` | `{ id: string }` |
-| `error` | `{ id?: string, message: string }` |
+| `done`     | `{ id: string }`                                                      |
+| `error`    | `{ id?: string, message: string }`                                    |
 
 The window closes automatically once the app is ready. This screen only runs in production. It never appears during development.
 
