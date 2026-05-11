@@ -52,7 +52,10 @@
   "css": "/custom.css",
   "contextual": {
     "options": [
-      "copy"
+      "copy",
+      "view",
+      "chatgpt",
+      "claude"
     ]
   }
 }
