@@ -1,23 +1,3 @@
-/* Hide the Mintlify navbar since we use our own */
-#navbar {
-  display: none !important;
-  height: 0 !important;
-}
-
-header#header {
-  display: none !important;
-  height: 0 !important;
-}
-
-/* Sidebar was positioned for a 64px navbar that we hide */
-#sidebar {
-  top: 0 !important;
-}
-
-.lg\:sticky {
-  top: 0 !important;
-}
-
 /* Match main site light-mode background */
 :root:not(.dark) {
   --background-light: 250 250 250 !important;

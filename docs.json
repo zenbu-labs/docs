@@ -8,18 +8,21 @@
     "dark": "#18181B"
   },
   "favicon": "/favicon.png",
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png",
+    "href": "https://zenbu.dev"
+  },
   "appearance": {
     "default": "light",
     "strict": true
   },
   "navbar": {
     "links": [
-      { "type": "github", "href": "https://github.com/zenbu-labs/zenbu" }
-    ],
-    "primary": {
-      "type": "discord",
-      "href": "https://discord.gg/t3jzHHfc6z"
-    }
+      { "label": "Home", "href": "https://zenbu.dev" },
+      { "label": "GitHub", "href": "https://github.com/zenbu-labs/zenbu" },
+      { "label": "Discord", "href": "https://discord.gg/t3jzHHfc6z" }
+    ]
   },
   "footer": {
     "socials": {
