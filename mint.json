@@ -1,0 +1,74 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Zenbu.js",
+  "logo": {
+    "dark": "/logo/dark.png",
+    "light": "/logo/light.png"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#18181B",
+    "light": "#71717A",
+    "dark": "#18181B"
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/zenbu-labs/zenbu"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Discord",
+    "url": "https://discord.gg/t3jzHHfc6z"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "concepts"
+      ]
+    },
+    {
+      "group": "Core",
+      "pages": [
+        "core/services",
+        "core/state",
+        "core/rpc",
+        "core/events",
+        "core/views",
+        "core/content-scripts",
+        "core/advice",
+        "core/plugins"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/production"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/zenbu-labs/zenbu",
+    "discord": "https://discord.gg/t3jzHHfc6z"
+  },
+  "contextual": {
+    "options": [
+      "copy"
+    ]
+  }
+}

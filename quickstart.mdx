@@ -1,81 +1,140 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
-icon: 'rocket'
+title: Quickstart
+description: "Create a Zenbu.js app in under a minute."
 ---
 
-## Get started in three steps
+## Create a new app
 
-Get your documentation site running locally and make your first customization.
+<Steps>
+  <Step title="Scaffold the project">
+    <Tabs>
+      <Tab title="pnpm">
+        ```bash
+        pnpx create-zenbu-app my-app
+        ```
+      </Tab>
+      <Tab title="npm">
+        ```bash
+        npx create-zenbu-app my-app
+        ```
+      </Tab>
+      <Tab title="yarn">
+        ```bash
+        yarn dlx create-zenbu-app my-app
+        ```
+      </Tab>
+      <Tab title="bun">
+        ```bash
+        bunx create-zenbu-app my-app
+        ```
+      </Tab>
+    </Tabs>
+    This creates a new directory with everything you need to get started.
+  </Step>
+  <Step title="Install dependencies">
+    <Tabs>
+      <Tab title="pnpm">
+        ```bash
+        cd my-app && pnpm install
+        ```
+      </Tab>
+      <Tab title="npm">
+        ```bash
+        cd my-app && npm install
+        ```
+      </Tab>
+      <Tab title="yarn">
+        ```bash
+        cd my-app && yarn
+        ```
+      </Tab>
+      <Tab title="bun">
+        ```bash
+        cd my-app && bun install
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Start the app">
+    <Tabs>
+      <Tab title="pnpm">
+        ```bash
+        pnpm run dev
+        ```
+      </Tab>
+      <Tab title="npm">
+        ```bash
+        npm run dev
+        ```
+      </Tab>
+      <Tab title="yarn">
+        ```bash
+        yarn dev
+        ```
+      </Tab>
+      <Tab title="bun">
+        ```bash
+        bun run dev
+        ```
+      </Tab>
+    </Tabs>
+    Your app will open in a new window, and any changes you make will hot-reload.
+  </Step>
+</Steps>
 
-### Step 1: Set up your local environment
+## Project structure
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+After scaffolding, your project looks like this:
 
-### Step 2: Deploy your changes
+```
+my-app/
+├── zenbu.config.ts       # The only required config file
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── src/
+    ├── main/
+    │   ├── schema.ts     # Zod schema for the database
+    │   └── services/
+    │       └── app.ts    # Opens the main window on boot
+    └── renderer/
+        ├── index.html
+        ├── main.tsx
+        └── App.tsx
+```
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+The `zenbu.config.ts` file is the entry point. It tells Zenbu.js where everything in your project is.
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+```typescript zenbu.config.ts
+import { defineConfig, definePlugin } from "@zenbujs/core/config"
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+export default defineConfig({
+  db: "./.zenbu/db",
+  uiEntrypoint: "./src/renderer",
+  plugins: [
+    definePlugin({
+      name: "app",
+      services: ["./src/main/services/*.ts"],
+      schema: "./src/main/schema.ts",
+    }),
+  ],
+})
+```
 
-### Step 3: Go live
+## Available scripts
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+| Script | What it does |
+|--------|-------------|
+| `pnpm run dev` | Run the app locally with hot reloading. |
+| `pnpm run link` | Regenerate types after changing your project structure. |
+| `pnpm run db:generate` | Create a migration after changing your database schema. |
+| `pnpm run build:source` | Stage the source tree for publishing. |
+| `pnpm run build:electron` | Produce a signed `.app` / installer. |
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Concepts" icon="book" href="/concepts">
+    Learn the plugin model, state, and RPC.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

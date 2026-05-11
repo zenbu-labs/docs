@@ -1,0 +1,71 @@
+---
+title: Views
+description: "The rendering primitive behind every page in your app."
+---
+
+<Warning>The Views API is under construction</Warning>
+
+## Views
+
+A view is the rendering primitive in Zenbu.js. Every page your app renders is a view, including the main application itself, which is a view called `entrypoint` defined by your `uiEntrypoint` config.
+
+The `entrypoint` view runs directly in the renderer process. Additional views run in [out of process iframes](https://www.chromium.org/developers/design-documents/oop-iframes/), and connect to the same [RPC](/core/rpc), [events](/core/events), and [database](/core/state).
+
+Additional views are useful for:
+
+- Letting a plugin embed content into your app.
+- Isolating heavy features so a slow render in one view doesn't block the rest of the app.
+- Letting teams or plugins develop parts of the app independently.
+
+## Registering a view
+
+From a service, use `ViewRegistryService` to register a view type:
+
+```typescript
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import { Service } from "@zenbujs/core/runtime"
+import { ViewRegistryService } from "@zenbujs/core/services"
+
+export class TerminalService extends Service.create({
+  key: "terminal",
+  deps: { viewRegistry: ViewRegistryService },
+}) {
+  async evaluate() {
+    const here = path.dirname(fileURLToPath(import.meta.url))
+    const viewRoot = path.resolve(here, "..", "..", "views", "terminal")
+    await this.ctx.viewRegistry.register({
+      type: "terminal",
+      root: viewRoot,
+      configFile: false,
+      meta: { kind: "view", label: "Terminal" },
+    })
+  }
+}
+```
+
+The view directory must contain an `index.html` and a `main.tsx` that mounts a React tree wrapped in `<ZenbuProvider>`.
+
+## Embedding a view
+
+```tsx
+import { View } from "@zenbujs/core/react"
+
+<View type="terminal" args={{ tabId }} />
+```
+
+
+## Reading view args
+
+Inside the child view, use `useViewArgs` to read the args passed by the parent:
+
+```tsx
+import { useViewArgs } from "@zenbujs/core/react"
+
+function TerminalApp() {
+  const { tabId } = useViewArgs<{ tabId: string }>()
+  // ...
+}
+```
+
+When the parent updates `args`, the hook re-renders with the new values.

@@ -1,0 +1,71 @@
+---
+title: Overview
+description: "API reference for Zenbu.js."
+---
+
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| `@zenbujs/core/runtime` | Service base class and runtime. |
+| `@zenbujs/core/services` | Built-in core services (Window, DB, RPC, HTTP, etc). |
+| `@zenbujs/core/config` | `defineConfig`, `definePlugin`, `defineBuildConfig`. |
+| `@zenbujs/core/db` | Database schema authoring (`createSchema`, `z`). |
+| `@zenbujs/core/advice` | Advice spec types and read-side helpers. Plugin code calls `this.advise(...)` / `this.injectContentScript(...)` directly on its `Service`. |
+| `@zenbujs/core/react` | React hooks for the renderer. |
+| `create-zenbu-app` | CLI scaffolding tool. |
+
+## Runtime
+
+```typescript
+import { Service } from "@zenbujs/core/runtime"
+```
+
+## Config
+
+```typescript
+import {
+  defineConfig,
+  definePlugin,
+  defineBuildConfig,
+} from "@zenbujs/core/config"
+```
+
+## Database
+
+```typescript
+import { createSchema, z } from "@zenbujs/core/db"
+```
+
+## React hooks
+
+```typescript
+import {
+  useDb,
+  useDbClient,
+  useCollection,
+  useRpc,
+  useEvents,
+  useViewArgs,
+} from "@zenbujs/core/react"
+```
+
+## CLI
+
+```bash
+# Create a new app
+pnpx create-zenbu-app my-app
+
+# Dev server with hot reload
+pnpm run dev
+
+# Regenerate types
+pnpm run link
+
+# Generate a database migration
+pnpm run db:generate
+
+# Build for production
+pnpm run build:source
+pnpm run build:electron
+```
