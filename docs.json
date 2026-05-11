@@ -12,6 +12,21 @@
     "default": "light",
     "strict": true
   },
+  "navbar": {
+    "links": [
+      { "type": "github", "href": "https://github.com/zenbu-labs/zenbu" }
+    ],
+    "primary": {
+      "type": "discord",
+      "href": "https://discord.gg/t3jzHHfc6z"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/zenbu-labs/zenbu",
+      "discord": "https://discord.gg/t3jzHHfc6z"
+    }
+  },
   "navigation": {
     "groups": [
       {
