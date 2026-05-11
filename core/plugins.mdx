@@ -1,9 +1,7 @@
 ---
 title: Plugins
-description: "The plugin definition and lifecycle."
 ---
 
-## Everything is a plugin
 
 Every Zenbu.js application is itself a plugin. Your app is defined with `definePlugin()` the same way any third-party extension would be, and it has the same capabilities. The only thing that makes the main application special is the `uiEntrypoint` in `defineConfig()`, which tells the framework which plugin's code to load in the renderer process first.
 

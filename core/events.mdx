@@ -1,9 +1,7 @@
 ---
 title: Events
-description: "One-way event channels across processes."
 ---
 
-## Events
 
 Events let the main process send messages to the renderer process. They're useful for things like push notifications, streaming output, or reacting to something that happened on the server side. Unlike RPC (where the renderer calls the main process and waits for a response), events are one-way: the main process fires them and any listener in the renderer process receives them.
 

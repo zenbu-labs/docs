@@ -1,9 +1,7 @@
 ---
 title: Database
-description: "Reactive synchronized database across processes."
 ---
 
-## Database
 
 Zenbu.js includes a JSON database that syncs across every process. Every process (main and renderer) holds an in-memory copy (also known as a replica) of the database. Reads are always local and synchronous. When a write happens in any process, it syncs to all other replicas automatically.
 
