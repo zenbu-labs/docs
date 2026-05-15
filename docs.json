@@ -64,6 +64,12 @@
         "pages": [
           "api-reference/overview"
         ]
+      },
+      {
+        "group": "Changelog",
+        "pages": [
+          "changelog/overview"
+        ]
       }
     ]
   },
