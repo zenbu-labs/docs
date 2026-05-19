@@ -18,11 +18,7 @@
     "strict": true
   },
   "navbar": {
-    "links": [
-      { "label": "Home", "href": "https://zenbu.dev" },
-      { "label": "GitHub", "href": "https://github.com/zenbu-labs/zenbu" },
-      { "label": "Discord", "href": "https://discord.gg/t3jzHHfc6z" }
-    ]
+    "links": []
   },
   "footer": {
     "socials": {
@@ -63,12 +59,6 @@
         "group": "API Reference",
         "pages": [
           "api-reference/overview"
-        ]
-      },
-      {
-        "group": "Changelog",
-        "pages": [
-          "changelog/overview"
         ]
       }
     ]
