@@ -92,9 +92,9 @@ my-app/
 ├── tsconfig.json
 └── src/
     ├── main/
-    │   ├── schema.ts     # Zod schema for the database
     │   └── services/
-    │       └── app.ts    # Opens the main window on boot
+    │       ├── init.ts   # Opens the main window on boot
+    │       └── cwd.ts    # RPC service that returns process.cwd()
     └── renderer/
         ├── index.html
         ├── main.tsx
@@ -107,17 +107,17 @@ The `zenbu.config.ts` file is the entry point. It tells Zenbu.js where everythin
 import { defineConfig, definePlugin } from "@zenbujs/core/config"
 
 export default defineConfig({
-  db: "./.zenbu/db",
   uiEntrypoint: "./src/renderer",
   plugins: [
     definePlugin({
       name: "app",
       services: ["./src/main/services/*.ts"],
-      schema: "./src/main/schema.ts",
     }),
   ],
 })
 ```
+
+Add a `schema: "./src/main/schema.ts"` field to the plugin when you're ready to introduce a database. The top-level `db` field is optional and defaults to `./.zenbu/db`.
 
 ## Available scripts
 
