@@ -55,15 +55,17 @@ Services declare dependencies on other services through the `deps` field. The fr
 import { Service } from "@zenbujs/core/runtime"
 import { WindowService } from "@zenbujs/core/services"
 
-export class AppService extends Service.create({
-  key: "app",
+export class InitService extends Service.create({
+  key: "init",
   deps: { window: WindowService },
 }) {
   async evaluate() {
-    await this.ctx.window.openView({ type: "entrypoint" })
+    await this.ctx.window.openWindow({})
   }
 }
 ```
+
+`openWindow({})` boots a main window pointed at your `uiEntrypoint`. Pass `injection: "<name>"` to open a window whose entry route renders a specific [injection](/core/injections) instead.
 
 By the time `evaluate()` runs, all dependencies in `this.ctx` are fully initialized.
 

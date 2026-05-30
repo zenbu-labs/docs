@@ -2,10 +2,11 @@
 title: Advice
 ---
 
+Advice lets a plugin wrap or replace a function or React component owned by another plugin, without modifying the original source. This API is inspired by Emacs, where [`defadvice`](https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html) is used to modify existing functions without editing their source.
 
-Advice lets a plugin wrap or replace a function or React component owned by another plugin, without modifying the original source.
-
-This API is inspired by Emacs, where [`defadvice`](https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html) is used to modify existing functions without editing their source.
+<Info>
+Advice is a kind of [injection](/core/injections). `this.advise(...)` is sugar over `this.inject(...)` with `meta.kind: "advice"`.
+</Info>
 
 ## Registering advice
 
@@ -18,7 +19,6 @@ export class ChromeService extends Service.create({ key: "chrome" }) {
   evaluate() {
     this.setup("wrap-counter", () =>
       this.advise({
-        view: "entrypoint",
         moduleId: "App.tsx",
         name: "Counter",
         type: "around",
@@ -32,22 +32,26 @@ export class ChromeService extends Service.create({ key: "chrome" }) {
 
 | Field | Meaning |
 |-------|---------|
-| `view` | View type to apply the advice in. `"*"` for every view. |
 | `moduleId` | Suffix of the source file that exports the target. |
 | `name` | Name of the export to advise. |
 | `type` | One of `"replace"`, `"before"`, `"after"`, `"around"`. |
 | `modulePath` | Path to your wrapper module, relative to the plugin root (or absolute). |
-| `exportName` | Named export inside the wrapper module. |
+| `exportName` | Named export inside the wrapper module. Defaults to `default`. |
+| `injectionName` | Optional override for the synthetic injection name. |
 
-Returns an unregister function. Use it as a `setup` cleanup.
+Returns an unregister function. Wrap in `this.setup()` for hot-reload cleanup.
 
 ## Around advice
 
-Receives the original as `__original` in props, making it the most flexible advice type.
+Around-advice receives the next function in the chain (which is the original target, or the next around-advice if several are stacked) as the **first positional argument**. For React components, since React calls components as `Component(props)`, the signature is `(Original, props)`.
 
 ```tsx src/content/wrap-counter.tsx
-export function WrapCounter(props) {
-  const Original = props.__original
+import type { ComponentType } from "react"
+
+export function WrapCounter<P>(
+  Original: ComponentType<P>,
+  props: P,
+) {
   return (
     <div className="bordered">
       <Original {...props} />
@@ -56,7 +60,21 @@ export function WrapCounter(props) {
 }
 ```
 
-Use this when you want to render the original but add structure around it or change its props.
+For a plain function `save({ path }: { path: string })`, around-advice would be:
+
+```typescript
+export function aroundSave(
+  next: (args: { path: string }) => void,
+  args: { path: string },
+) {
+  console.log("before", args.path)
+  const result = next(args)
+  console.log("after", args.path)
+  return result
+}
+```
+
+Use around-advice when you want to render the original but add structure around it, change its props, or short-circuit it conditionally (skip the `next(...)` call).
 
 ## Replace advice
 
@@ -70,15 +88,18 @@ export function WrapCounter() {
 
 ## Before / After
 
-`before` and `after` advice run extra logic around the original function.
+`before` and `after` advice wrap a function without taking over the call.
+
+- `before` runs first with the original args (`...originalArgs`); its return value is ignored.
+- `after` runs last with the result followed by the original args (`result, ...originalArgs`). If it returns a value other than `undefined`, that value overrides the result.
 
 ```typescript
-// before: runs your function, then calls the original
+// before: runs first, then the original
 export function beforeSave(args: { path: string }) {
   console.log("saving", args.path)
 }
 
-// after: calls the original, then runs your function with the result
+// after: runs last; return a value to override the result
 export function afterSave(result: void, args: { path: string }) {
   console.log("saved", args.path)
 }
@@ -86,4 +107,4 @@ export function afterSave(result: void, args: { path: string }) {
 
 ## Hot reloading
 
-Adding, removing, or editing a `this.advise(...)` call reloads the affected views so the new advice takes effect. Edits inside the advice module itself hot-replace through Vite's normal HMR.
+Adding, removing, or editing a `this.advise(...)` call reloads the renderer so the new advice takes effect. Edits inside the advice module itself hot-replace through Vite's normal HMR.

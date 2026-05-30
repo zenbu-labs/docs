@@ -118,13 +118,13 @@ Inside `update()`, you mutate the root object directly, the same way you would w
 
 Regular data fields are always held in memory across every process. Collections are for data that can grow large (like agent messages or logs) and should only be loaded into memory when needed.
 
-Define a collection in your schema with `f.collection()`:
+Define a collection in your schema with `collection(...)`:
 
 ```typescript src/main/schema.ts
-import { createSchema, f, z } from "@zenbujs/core/db"
+import { createSchema, collection, z } from "@zenbujs/core/db"
 
 export default createSchema({
-  messages: f.collection(
+  messages: collection(
     z.object({
       text: z.string(),
       author: z.string(),
@@ -173,13 +173,13 @@ Collection data is only loaded into memory when you subscribe or read from it. T
 
 Blobs store binary data (`Uint8Array`) like files or images. Like collections, they live on disk and are only loaded into memory when you read them.
 
-Define a blob in your schema with `f.blob()`:
+Define a blob in your schema with `blob(...)`:
 
 ```typescript src/main/schema.ts
-import { createSchema, f, z } from "@zenbujs/core/db"
+import { createSchema, blob, z } from "@zenbujs/core/db"
 
 export default createSchema({
-  avatar: f.blob({ debugName: "avatar" }),
+  avatar: blob({ debugName: "avatar" }),
 })
 ```
 

@@ -10,7 +10,7 @@ Under the hood, communication happens over a WebSocket, which means the same RPC
 Services are scoped under their owning plugin's name. For a plugin named `app`, the call site is `rpc.app.<service>.<method>(...)`. Core's own services live under `rpc.core.<service>`.
 
 ```typescript
-// Main process — declared inside the `app` plugin
+// Main process. Declared inside the `app` plugin.
 export class MathService extends Service.create({
   key: "math",
 }) {

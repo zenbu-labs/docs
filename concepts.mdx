@@ -35,7 +35,7 @@ export class CounterService extends Service.create({
   private count = 0
 
   evaluate() {
-    // Called when the service starts
+    // Called when the service starts.
   }
 
   increment() {
@@ -83,7 +83,7 @@ function App() {
   const rpc = useRpc()
 
   const handleClick = async () => {
-    const newCount = await rpc.counter.increment()
+    const newCount = await rpc.app.counter.increment()
     console.log(newCount)
   }
 
@@ -109,6 +109,7 @@ export class NotificationService extends Service.create({
 
 The renderer process listens with `useEvents()`:
 
+
 ```typescript
 import { useEvents } from "@zenbujs/core/react"
 import { useEffect, useState } from "react"
@@ -127,3 +128,8 @@ function Notifications() {
   return message ? <div className="toast">{message}</div> : null
 }
 ```
+
+## Injections
+
+When a plugin wants to add UI to the app, it registers an [**injection**](/core/injections). The host already looks for injections in known places (sidebars, the bottom panel, the title bar, the footer) and renders them. A service registers one with `this.inject({ name, modulePath, meta })`, and any other plugin discovers it with `useInjections({ kind })` or renders it with `<View name="..." />`. The same primitive also covers [advice](/core/advice) and code that just needs to run at boot.
+

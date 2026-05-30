@@ -46,8 +46,8 @@
           "core/state",
           "core/rpc",
           "core/events",
+          "core/injections",
           "core/views",
-          "core/content-scripts",
           "core/advice",
           "core/plugins"
         ]

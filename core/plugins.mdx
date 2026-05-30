@@ -22,6 +22,9 @@ export default defineConfig({
       schema: "./src/main/schema.ts",
       events: "./src/main/events.ts",
       migrations: "./migrations",
+      icons: {
+        "my-view": '<svg ...>...</svg>',
+      },
     }),
   ],
 })
@@ -34,6 +37,8 @@ export default defineConfig({
 | `schema` | no | Path to the database schema definition. |
 | `events` | no | Path to event type definitions. |
 | `migrations` | no | Directory of generated migration files. |
+| `preload` | no | Path to a renderer preload module. |
+| `icons` | no | Map of inline SVG strings keyed by [injection](/core/injections) `name`. When you call `this.inject({ name })` and a matching key exists, the framework copies the SVG into `meta.icon` for you. Lookup is per-plugin (no cross-plugin fallback). |
 | `dependsOn` | no | Declares which other plugins this plugin needs type definitions from. See [Type dependencies](#type-dependencies). |
 
 ## Scaffolding a plugin
@@ -66,6 +71,39 @@ plugins: [
 
 Adding or removing a plugin in `zenbu.config.ts` is a hot-reloadable change that takes effect without restarting the app.
 
+## Local-only plugins (`localPlugins`)
+
+A `zenbu.config.ts` can opt into a per-developer overlay file that's gitignored and loaded only if it exists. Use this when you want to wire a local plugin (e.g. one cloned into `~/.zenbu/plugins/...`) into your app without committing the path:
+
+```typescript
+export default defineConfig({
+  uiEntrypoint: "./src/renderer",
+  plugins: [
+    "./plugins/app/zenbu.plugin.ts",
+  ],
+  localPlugins: "./zenbu.local.ts", // gitignored; optional
+})
+```
+
+```typescript zenbu.local.ts
+import type { LocalPluginsDefault } from "@zenbujs/core/config"
+
+const plugins: LocalPluginsDefault = [
+  "/Users/me/.zenbu/plugins/the-browser-plugin/zenbu.plugin.ts",
+  // or an inline definePlugin({...})
+]
+export default plugins
+```
+
+Rules:
+
+- The default export is a plugin entry, or an array of entries. Same shape as `plugins`.
+- Relative paths inside the overlay anchor to the **overlay file's** directory, not the project root.
+- `localPlugins` accepts a single string or an array of strings (multiple overlays).
+- If the overlay file doesn't exist, the field is silently ignored.
+- Editing the overlay file hot-reloads exactly like editing `zenbu.config.ts`.
+- `zen build:source` / `zen build:electron` / `zen publish:source` **skip** `localPlugins` entirely, so a developer's overlay can never ship in a build artefact.
+
 ## Plugin capabilities
 
 A plugin has the same capabilities as the host application:
@@ -73,9 +111,7 @@ A plugin has the same capabilities as the host application:
 - **Services** run in the main process and expose methods via RPC.
 - **Database schemas** define sections of the shared database.
 - **Events** can be emitted and listened to across plugins.
-- **Views** are iframe-mounted renderer entry points other plugins can embed.
-- **Content scripts** inject JavaScript into any view.
-- **Advice** lets a plugin wrap or replace any React component in the renderer.
+- **[Injections](/core/injections)** are the unified renderer-side surface. One primitive (`this.inject(...)` / `useRegisterInjection(...)`) covers React components other plugins can render via `<View>`, plain side-effect modules (the old "content script" pattern), plain functions/values, and [advice](/core/advice) (sugar for wrapping or replacing an existing export).
 
 ## Type dependencies
 
