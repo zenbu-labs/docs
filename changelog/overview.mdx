@@ -3,6 +3,22 @@ title: Changelog
 description: New features, updates, and fixes for Zenbu.js.
 ---
 
+<Update label="June 19, 2026">
+
+## Week of June 16 — `@zenbujs/core` API cleanup
+
+A small but breaking week for the `@zenbujs/core` package: zod is no longer re-exported, and `makeCollection()` now returns a real collection ID by default.
+
+### Updates
+
+- **`makeCollection()` auto-generates a collection ID.** Calling [`makeCollection()`](/core/state) without arguments now returns a stable, unique `collectionId` instead of an empty string. You no longer need to pass one in just to get a usable collection — useful when defining collections inline inside schema defaults.
+
+### Fixes
+
+- **`zod` is no longer re-exported from `@zenbujs/core`.** Zod is a peer dependency, so it should be imported directly from `zod` rather than from `@zenbujs/core/db`. If you were relying on the re-export, switch to `import { z } from "zod"`. See [State](/core/state) for the updated pattern.
+
+</Update>
+
 <Update label="June 5, 2026">
 
 ## Week of June 2 — desktop app v0.0.10 and `@zenbujs/core` 0.4.3
