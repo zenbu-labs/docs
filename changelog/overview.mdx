@@ -3,11 +3,23 @@ title: Changelog
 description: New features, updates, and fixes for Zenbu.js.
 ---
 
-<Update label="June 26, 2026">
+<Update label="July 3, 2026">
 
-## Week of June 23 — quiet week
+## Week of June 30 — bidirectional events and blob endpoint improvements
 
-No product changes shipped this week. The previous [`@zenbujs/core` API cleanup](/changelog/overview) (June 19) remains the latest release. Regular updates resume next week.
+Events are no longer one-way: server-side code can now subscribe to events, and the renderer can emit events back to the main process. The blob HTTP endpoint also got a round of optimizations.
+
+### New
+
+- **Server-side event subscriptions.** Services can now subscribe to events using `this.ctx.rpc.events.<name>.subscribe(cb)` in addition to emitting them. Useful when one service needs to react to events fired by another service — or by the renderer. See [Events](/core/events).
+- **Renderer can emit events to the main process.** `useEvents()` returns callable event nodes, so the renderer can fire events that reach both local (renderer-side) subscribers and the main process. Events emitted from a renderer are intentionally **not** re-broadcast to other clients. See [Events](/core/events).
+- **Backward-compatible unified event proxy.** Every event node is now both callable (emit) and subscribable, and the new type is assignable to the existing event proxy — existing `emit`/`subscribe` code keeps working without changes.
+
+### Updates
+
+- **Faster blob endpoint.** Blob responses now stream from disk instead of buffering, so large blobs are served with lower memory use and faster time-to-first-byte.
+- **`Content-Type` on blob responses.** The blob endpoint now sets `Content-Type` from the stored blob type (falling back to the `?type=` query param, then `application/octet-stream`), so images, video, and other typed blobs render correctly when loaded directly by the browser.
+- **CORS on the blob endpoint.** Cross-origin requests to the blob endpoint are now allowed, so blobs can be fetched from plugin views and external tools that run on a different origin.
 
 </Update>
 
